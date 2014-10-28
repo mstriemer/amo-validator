@@ -119,7 +119,7 @@ def test_packed_scripts_no_pollution():
     Test that packed scripts test for pollution without being overzealous.
     """
 
-    x = MockXPI({"foo/bar.js": "tests/resources/content/pollution_error.js"})
+    x = MockXPI({"foo/bar.js": "tests/resources/content/no_pollution.js"})
 
     err = ErrorBundle()
     err.supported_versions = {}
@@ -134,13 +134,11 @@ def test_packed_scripts_no_pollution():
         "scripts",
         [{"scripts": ["foo/bar.js"],
           "package": x,
-          "state": ["subpackage", "subsubpackage"]}])
-    err.save_resource("marked_scripts", set(["chrome://otherns/foo/bar.js"]))
+          "state": ["subpackage.jar", "subsubpackage"]}])
+    err.save_resource("marked_scripts", set(["chrome://ns/foo/bar.js"]))
 
     content.test_packed_scripts(err, x)
 
     eq_(err.package_stack, [])
 
     assert not err.failed()
-
-
